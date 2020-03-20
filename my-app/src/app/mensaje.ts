@@ -1,17 +1,15 @@
 
 export class mensaje{
 
-
-    hola :string;
+        c: any
+        e: any;
+        n: any;
     
-   
-    constructor(
-        
-        hola = 'BUENOS DIAS SERVIDOR',
-
-
-    ) {
-        this.hola = hola;
-
-    }
+    
+        constructor(c, e, n) {
+            this.c = c;
+            this.e = e;
+            this.n = n;
+        }
+    
 }
