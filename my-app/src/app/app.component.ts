@@ -67,4 +67,43 @@ export class AppComponent {
       this.serverPublicKey = new rsa.PublicKey(bigconv.hexToBigint(res.e),bigconv.hexToBigint(res.n))
     })
   }
+
+
+  async firmaCiega() {
+    var r = await big.prime(3072);
+    //var r = BigInt(Math.floor(Math.random() * 2000000) + 1  )
+    var me = "HOLA"
+    var m = bigconv.textToBigint(me);
+    
+
+    var bm = this.blindMessage(m,r,this.serverPublicKey.e,this.serverPublicKey.n)
+    
+    this.mensaje = new mensaje(bigconv.bigintToHex(bm),bigconv.bigintToHex(this.publicKey.e), bigconv.bigintToHex(this.publicKey.n))
+
+    this.Service.firmaCiega(this.mensaje)
+      .subscribe((res: any) => {
+        bm = this.verifyBlindSignature(bigconv.hexToBigint(res.respuestaServidor),r,this.serverPublicKey.e,this.serverPublicKey.n);
+        this.respuesta = bigconv.bigintToText(this.serverPublicKey.verify(bm))
+
+      });
+  }
+
+  blindMessage(m: bigint, r: bigint, e: bigint, n: bigint){
+    var ReModn = big.modPow(r,e,n);
+    var bm = (m * ReModn) % n;
+
+    return bm;
+
+  }
+
+  verifyBlindSignature(bs: bigint, r: bigint, e: bigint, n: bigint){
+    var rInvmodn = big.modInv(r,n);
+
+    var bm = (bs*rInvmodn) % n;
+
+    return bm;
+
+  }
+
+
 }

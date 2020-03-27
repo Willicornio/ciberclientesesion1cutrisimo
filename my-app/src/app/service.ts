@@ -29,5 +29,12 @@ import  * as big from 'bigint-crypto-utils';
     dameClave() {
       return this.http.get(this.URL + '/key');
     }
+
+    firmaCiega(mensaje: any) {
+
+      return this.http.post(this.URL + '/blindSign', {
+        mensaje
+      });
+    }
   }
   
